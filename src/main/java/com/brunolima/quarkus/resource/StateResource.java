@@ -9,6 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.jboss.resteasy.annotations.jaxrs.QueryParam;
 
 import com.brunolima.quarkus.entity.State;
 import com.brunolima.quarkus.repository.StateRepository;
@@ -20,22 +21,29 @@ public class StateResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<State> list() {
-		return repository.listAll();
+	public Iterable<State> list() {
+		return repository.findAll();
 	}
 
 	@Path("search/code/{code}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public State findByCode(@PathParam String code) {
-		return repository.findByCode(code).orElseThrow();
+		return repository.findByCodeIgnoreCase(code).orElseThrow();
 	}
 
 	@Path("search/name/{name}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<State> listByName(@PathParam String name) {
-		return repository.findByName(name);
+		return repository.findByNameContainsIgnoreCase(name);
+	}
+
+	@Path("search/")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<State> search(@QueryParam String code, @QueryParam String name) {
+		return repository.findByCodeContainsIgnoreCaseAndNameContainsIgnoreCase(code, name);
 	}
 
 }
