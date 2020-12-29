@@ -8,6 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
+
 import com.brunolima.quarkus.entity.State;
 import com.brunolima.quarkus.repository.StateRepository;
 
@@ -21,4 +23,19 @@ public class StateResource {
 	public List<State> list() {
 		return repository.listAll();
 	}
+
+	@Path("search/code/{code}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public State findByCode(@PathParam String code) {
+		return repository.findByCode(code).orElseThrow();
+	}
+
+	@Path("search/name/{name}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<State> listByName(@PathParam String name) {
+		return repository.findByName(name);
+	}
+
 }
