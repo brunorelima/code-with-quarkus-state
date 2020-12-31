@@ -17,7 +17,7 @@ import com.brunolima.quarkus.repository.StateRepository;
 @Path("/states")
 public class StateResource {
 	@Inject
-	private StateRepository repository;
+	StateRepository repository;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -29,7 +29,7 @@ public class StateResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public State findByCode(@PathParam String code) {
-		return repository.findByCodeIgnoreCase(code).orElseThrow();
+		return repository.findByCode(code).orElseThrow();
 	}
 
 	@Path("search/name/{name}")
