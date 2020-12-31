@@ -1,10 +1,18 @@
 package com.brunolima.quarkus.entity;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import io.quarkus.elytron.security.common.BcryptUtil;
+import io.quarkus.security.jpa.Password;
+import io.quarkus.security.jpa.Roles;
+import io.quarkus.security.jpa.UserDefinition;
+import io.quarkus.security.jpa.Username;
+
+@UserDefinition
 @Entity
 public class User {
 
@@ -14,12 +22,16 @@ public class User {
 	
 	private String firstName;
 
+	@Username
 	private String userName;
 
+	@Password
 	private String password;
 
+	@Roles
 	private String role;
 	
+	@JsonbTransient
 	public Integer getId() {
 		return id;
 	}
@@ -32,6 +44,7 @@ public class User {
 		return userName;
 	}
 	
+	@JsonbTransient
 	public String getPassword() {
 		return password;
 	}
@@ -50,7 +63,7 @@ public class User {
 	}
 	
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = BcryptUtil.bcryptHash(password);
 	}
 
 }
